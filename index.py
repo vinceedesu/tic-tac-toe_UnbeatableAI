@@ -34,7 +34,7 @@ class Game:
     
     def __init__(self): 
         self.board = Board()
-        self.player = 1
+        self.player = 1 #1- cross #2- circle
         self.show_lines()
 
     def show_lines(self):
@@ -48,6 +48,23 @@ class Game:
         
     def next_player(self):
         self.player = self.player % 2 + 1
+        
+    def draw_fig(self, row, col):
+        if self.player == 1:
+            #draw cross
+            startDecs = (col * SQUARE_SIZE + OFFSET, row * SQUARE_SIZE + OFFSET)
+            endDecs = (col * SQUARE_SIZE + SQUARE_SIZE - OFFSET, row * SQUARE_SIZE + SQUARE_SIZE - OFFSET)
+            pygame.draw.line(screen, cross_color, startDecs, endDecs, cross_width)
+            
+            #draw decline
+            startAsc = (col * SQUARE_SIZE + OFFSET, row * SQUARE_SIZE + SQUARE_SIZE - OFFSET)
+            endAsc = (col * SQUARE_SIZE + SQUARE_SIZE - OFFSET, row * SQUARE_SIZE + OFFSET)
+            pygame.draw.line(screen, cross_color, startAsc, endAsc, cross_width)
+        
+        elif self.player == 2:
+            center = (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE// 2)
+            pygame.draw.circle(screen, circle_color, center, Radius, circle_width)
+        
 
 # main function
 def main():
@@ -70,8 +87,10 @@ def main():
                 # code for not filling not empty cells
                 if board.emptySquare(row,col):
                     board.markSquare(row, col, game.player)
+                    game.draw_fig(row, col)
+                    
                     game.next_player()
-                    print(board.squares)
+
         
         
         pygame.display.update()
