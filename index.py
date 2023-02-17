@@ -4,6 +4,7 @@ import sys
 import pygame
 import constants
 import numpy as np 
+import random
 
 from constants import *
 
@@ -73,13 +74,32 @@ class Board:
     def isempty(self):
         return self.marked_sqrs == 0
     
-
-
+class AI:
+    def __init__(self, level=0, player = 2):
+        self.level =level
+        self.player = player
+        
+    def rnd(self, board):
+        empty_sqrs = board.get_empty_sqrs()
+        idx = random.randrange(0, len(empty_sqrs))
+        
+        return empty_sqrs[idx]
+    
+    def eval(self, main_board):
+        if self.level == 0:
+            move = self.rnd(main_board)
+        else:
+            pass
+    
+        return move
 class Game:
     
     def __init__(self): 
         self.board = Board()
+        # self.ai = AI()
         self.player = 1 #1- cross #2- circle
+        self.gamemode = 'pvp'
+        self.running = True
         self.show_lines()
 
     def show_lines(self):
