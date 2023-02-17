@@ -156,6 +156,8 @@ class Game:
         self.show_lines()
 
     def show_lines(self):
+        
+        screen.fill(BG_Color)
         #vertical lines
         pygame.draw.line(screen,line_Color,(SQUARE_SIZE, 0), (SQUARE_SIZE, HEIGHT), line_WIDTH)
         pygame.draw.line(screen,line_Color,(WIDTH - SQUARE_SIZE, 0), (WIDTH - SQUARE_SIZE, HEIGHT), line_WIDTH)
@@ -163,7 +165,12 @@ class Game:
         # horizontal lines
         pygame.draw.line(screen,line_Color,(0, SQUARE_SIZE), (WIDTH, SQUARE_SIZE), line_WIDTH)
         pygame.draw.line(screen,line_Color,(0, HEIGHT - SQUARE_SIZE), (WIDTH, HEIGHT - SQUARE_SIZE), line_WIDTH)
-        
+    
+    def make_move(self, row, col):
+        self.board.markSquare(row, col, self.player)
+        self.draw_fig(row, col)
+        self.next_player()
+    
     def next_player(self):
         self.player = self.player % 2 + 1
         
@@ -182,6 +189,12 @@ class Game:
         elif self.player == 2:
             center = (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE// 2)
             pygame.draw.circle(screen, circle_color, center, Radius, circle_width)
+    
+    def change_gameMode(self):
+        self.gamemode = 'ai' if self.gamemode == 'pvp' else 'pvp'
+        
+    def reset(self):
+        self.__init__()
         
 
 # main function
@@ -197,6 +210,23 @@ def main():
                 pygame.quit()
                 sys.exit()
                 
+            if event.type == pygame.KEYDOWN:
+                
+                if event.key == pygame.K_g:
+                    game.change_gameMode()
+                
+                if event.key ==  pygame.K_r:
+                    game.reset()
+                    ai = game.ai
+                    board = game.board
+                
+                #0 random ai
+                if event.key == pygame.K_0:
+                    ai.level = 0
+                
+                if event.key == pygame.K_1:
+                    ai.level = 1
+                
             if event.type == pygame.MOUSEBUTTONDOWN:   
                 pos = event.pos
                 row = pos[1] // SQUARE_SIZE
@@ -204,20 +234,15 @@ def main():
                 
                 # code for not filling not empty cells
                 if board.emptySquare(row,col):
-                    board.markSquare(row, col, game.player)
-                    game.draw_fig(row, col)
-                    
-                    game.next_player()
+                    game.make_move(row, col)
 
-            if game.gamemode == 'ai' and game.player == ai.player:
+            if game.gamemode == 'ai' and game.player == ai.player and game.running:
                 pygame.display.update()
                 
+                #ai methods
                 row, col = ai.eval(board)
-                board.markSquare(row, col, ai.player)
-                game.draw_fig(row, col)
                 
-                game.next_player()
-                
+                game.make_move(row, col)
         
         pygame.display.update()
 
