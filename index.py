@@ -3,6 +3,7 @@
 import sys
 import pygame
 import constants
+import numpy as np 
 
 from constants import *
 
@@ -15,9 +16,18 @@ pygame.display.set_caption('Tic Tac Toe')
 screen.fill( BG_Color )
 
 
+class Board:
+    
+    def __init__(self):
+        self.squares = np.zeros( (ROWS, COLS) )
+        print(self.squares)
+
+
+
 class Game:
     
     def __init__(self): 
+        self.board = Board()
         self.show_lines()
 
     def show_lines(self):
