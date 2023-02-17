@@ -5,6 +5,7 @@ import pygame
 import constants
 import numpy as np 
 import random
+import copy
 
 from constants import *
 
@@ -75,7 +76,7 @@ class Board:
         return self.marked_sqrs == 0
     
 class AI:
-    def __init__(self, level=0, player = 2):
+    def __init__(self, level=1, player = 2):
         self.level =level
         self.player = player
         
@@ -85,20 +86,52 @@ class AI:
         
         return empty_sqrs[idx]
     
+    def minimax(self, board, maximizing):
+        #terminal cases
+        case = board.final_state()
+        
+        #player 1 win
+        if case == 1:
+            return 1
+        
+        #player 2 win
+        if case == 2:
+            return -1 
+        
+        #draw
+        elif board.isfull():
+            return 0
+        
+        if maximizing:
+            pass
+        
+        elif not maximizing:
+            min_eval = 100
+            best_move = None
+            empty_sqrs = board.get_empty_sqrs()
+            
+            for (row, col) in empty_sqrs:
+                temp_board =  copy.deepcopy(board)
+                temp_board.markSquare(row, col, self.player)
+                self.minimax(temp_board, True, )
+        
+        
+    
     def eval(self, main_board):
         if self.level == 0:
             move = self.rnd(main_board)
         else:
-            pass
+            # minimax algo
+            self.minimax(main_board, False)
     
         return move
 class Game:
     
     def __init__(self): 
         self.board = Board()
-        # self.ai = AI()
+        self.ai = AI()
         self.player = 1 #1- cross #2- circle
-        self.gamemode = 'pvp'
+        self.gamemode = 'ai'
         self.running = True
         self.show_lines()
 
@@ -135,7 +168,7 @@ class Game:
 def main():
     
     game = Game()
-     
+    ai = game.ai
     board = game.board
     # mainLoop game
     while True:
@@ -156,7 +189,15 @@ def main():
                     
                     game.next_player()
 
-        
+            if game.gamemode == 'ai' and game.player == ai.player:
+                pygame.display.update()
+                
+                row, col = ai.eval(board)
+                board.markSquare(row, col, ai.player)
+                game.draw_fig(row, col)
+                
+                game.next_player()
+                
         
         pygame.display.update()
 
