@@ -221,7 +221,8 @@ class Game:
         
     def isover(self):
         return self.board.final_state(show=True) != 0 or self.board.isFull()
-        
+
+
 
 # main function
 def main():

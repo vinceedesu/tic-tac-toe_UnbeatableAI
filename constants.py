@@ -14,21 +14,21 @@ line_WIDTH = 10
 
 # cross player
 cross_width = 15
-cross_color = (19,240,146)
+cross_color = (0,143,140)
 
 OFFSET = 50
 
 # circle player
 circle_width =10 
 Radius = SQUARE_SIZE //4
-circle_color = (28,132,217)
+circle_color = (216,255,219)
 
 
 
 
 # changed color scheme
-BG_Color = (69, 42, 60)
-line_Color = (105,230,18)
+BG_Color = (2,53,53)
+line_Color = (199,255,237)
 
 
 
